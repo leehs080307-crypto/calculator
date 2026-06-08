@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI TTS 음성 변환기</title>
+  <title>AI 콘셉트 디자이너 스튜디오</title>
   <style>
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       min-height: 100vh;
@@ -14,341 +13,376 @@
       font-family: Arial, sans-serif;
       color: #333;
     }
-
     .container {
-      width: min(900px, 92%);
+      width: min(1000px, 94%);
       margin: 40px auto;
       background: #ffffff;
       border-radius: 24px;
       padding: 28px;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.16);
     }
-
-    h1 {
-      margin: 0 0 8px;
-      text-align: center;
-      font-size: 28px;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #777;
-      margin-bottom: 24px;
-      font-size: 14px;
-    }
-
-    .info {
-      padding: 14px;
-      margin-bottom: 20px;
-      border-radius: 14px;
-      background: #e8f5e9;
-      color: #2e7d32;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .option-box {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    select, input {
-      height: 44px;
-      padding: 0 12px;
+    h1 { margin: 0 0 8px; text-align: center; font-size: 28px; color: #1a237e; }
+    .subtitle { text-align: center; color: #777; margin-bottom: 28px; font-size: 14px; }
+    
+    /* 인증 폼 */
+    .auth-box { max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    input, select, textarea {
+      padding: 12px 14px;
       border: 1px solid #ddd;
       border-radius: 12px;
-      font-size: 14px;
+      font-size: 15px;
       outline: none;
-    }
-
-    textarea {
       width: 100%;
-      min-height: 180px;
-      resize: vertical;
-      padding: 16px;
-      border: 1px solid #ddd;
-      border-radius: 16px;
-      font-size: 16px;
-      line-height: 1.5;
-      outline: none;
-      font-family: Arial, sans-serif;
     }
-
-    textarea:focus, select:focus, input:focus {
+    input:focus, select:focus, textarea:focus {
       border-color: #42a5f5;
       box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.15);
     }
+    textarea { min-height: 100px; resize: vertical; }
 
-    .label {
-      font-weight: bold;
-      margin-bottom: 6px;
+    /* 버튼 정의 */
+    button {
+      border: none; border-radius: 12px; padding: 0 16px; height: 46px;
+      font-size: 15px; cursor: pointer; transition: 0.15s; font-weight: bold;
     }
+    button:hover { transform: translateY(-2px); opacity: 0.9; }
+    button:disabled { cursor: not-allowed; opacity: 0.6; transform: none; }
+    .login-btn { background: #42a5f5; color: white; }
+    .signup-btn { background: #7e57c2; color: white; }
+    .logout-btn { background: #455a64; color: white; }
+    .main-btn { background: #1e88e5; color: white; width: 100%; height: 50px; font-size: 16px; margin-top: 10px; }
+    .action-btn { background: #ffb300; color: #333; height: 40px; font-size: 13px; }
+    .delete-btn { background: #ef5350; color: white; height: 35px; font-size: 13px; padding: 0 10px; }
 
-    .button-row {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      margin-top: 14px;
+    .top-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; margin-bottom: 22px; padding: 14px; border-radius: 16px; background: #f7f9fb;
     }
-
-    button, .download-link {
-      border: none;
-      border-radius: 12px;
-      padding: 0 18px;
-      height: 46px;
-      font-size: 15px;
-      cursor: pointer;
-      transition: 0.15s;
-      font-weight: bold;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    .workspace {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px;
     }
-
-    button:hover, .download-link:hover {
-      transform: translateY(-2px);
-      opacity: 0.9;
+    .panel {
+      background: #fdfdfd; border: 1px solid #edf1f5; padding: 20px; border-radius: 18px;
     }
-
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.6;
-      transform: none;
-    }
-
-    .make-btn {
-      background: #42a5f5;
-      color: white;
-    }
-
-    .clear-btn {
-      background: #b0bec5;
-      color: white;
-    }
-
-    .download-link {
-      background: #7e57c2;
-      color: white;
-    }
-
+    .panel-title { font-size: 16px; font-weight: bold; margin-bottom: 12px; color: #3949ab; border-left: 4px solid #3949ab; padding-left: 8px; }
+    
+    /* 미디어 파일 레이아웃 */
+    .preview-img { max-width: 100%; max-height: 300px; display: block; margin: 12px auto; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     .hidden { display: none; }
-
-    .status {
-      min-height: 24px;
-      margin-top: 14px;
-      color: #555;
-      font-size: 14px;
+    .status { min-height: 24px; margin: 10px 0; color: #1e88e5; font-size: 14px; font-weight: bold; text-align: center;}
+    
+    /* 히스토리 리스트 */
+    .list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+    .item {
+      display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center;
+      padding: 16px; border-radius: 16px; background: #f7f9fb; border: 1px solid #edf1f5;
     }
+    .history-thumb { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; background: #eee; }
+    .item-prompt { margin: 0 0 4px; font-size: 14px; font-weight: bold; color: #333; line-height: 1.4; }
+    .item-date { font-size: 12px; color: #999; }
 
-    .result-box {
-      margin-top: 20px;
-      padding: 18px;
-      border-radius: 18px;
-      background: #f7f9fb;
-      border: 1px solid #edf1f5;
-    }
-
-    audio {
-      width: 100%;
-      margin-top: 10px;
-    }
-
-    .help {
-      margin-top: 12px;
-      font-size: 13px;
-      color: #777;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 700px) {
-      .option-box { grid-template-columns: 1fr; }
-      .button-row { justify-content: stretch; }
-      button, .download-link { width: 100%; }
+    @media (max-width: 768px) {
+      .workspace { grid-template-columns: 1fr; }
+      .item { grid-template-columns: 1fr; text-align: center; }
+      .history-thumb { margin: 0 auto; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>AI TTS 음성 변환기</h1>
-    <div class="subtitle">텍스트를 AI 음성 mp3 파일로 변환합니다</div>
+    <h1>🎨 AI 콘셉트 디자이너 스튜디오</h1>
+    <div class="subtitle">Firebase Auth/DB + OpenAI GPT-4o Vision & DALL-E 3 & TTS 연동 시스템</div>
 
-    <div class="info">
-      현재 구조: GitHub Pages 화면 → Google Apps Script 서버 → OpenAI TTS API → mp3 음성 반환<br />
-      API Key는 index.html에 들어가지 않고 Apps Script의 스크립트 속성에 저장됩니다.
-    </div>
-
-    <div class="option-box">
-      <select id="modelSelect">
-        <option value="tts-1">tts-1 빠른 생성</option>
-        <option value="tts-1-hd">tts-1-hd 고품질</option>
-      </select>
-
-      <select id="voiceSelect">
-        <option value="alloy">alloy</option>
-        <option value="echo">echo</option>
-        <option value="fable">fable</option>
-        <option value="onyx">onyx</option>
-        <option value="nova">nova</option>
-        <option value="shimmer">shimmer</option>
-      </select>
-
-      <input id="speedInput" type="number" min="0.25" max="4.0" step="0.05" value="1.0" placeholder="속도" />
-    </div>
-
-    <div>
-      <div class="label">변환할 텍스트</div>
-      <textarea id="textInput" placeholder="음성으로 바꿀 문장을 입력하세요. 예: 안녕하세요. 오늘은 Firebase와 OpenAI API를 활용한 웹페이지 제작을 배워보겠습니다."></textarea>
-    </div>
-
-    <div class="button-row">
-      <button class="clear-btn" id="clearBtn">초기화</button>
-      <button class="make-btn" id="makeBtn">음성 만들기</button>
-    </div>
-
-    <div id="status" class="status"></div>
-
-    <div id="resultBox" class="result-box hidden">
-      <div class="label">생성된 음성</div>
-      <audio id="audioPlayer" controls></audio>
-      <div class="button-row">
-        <a id="downloadLink" class="download-link" href="#" download="tts-audio.mp3">mp3 다운로드</a>
+    <section id="authSection">
+      <div class="auth-box">
+        <h2>사용자 로그인</h2>
+        <input id="emailInput" type="email" placeholder="학교 구글 이메일 또는 ID 형식 이메일" />
+        <input id="passwordInput" type="password" placeholder="비밀번호 6자리 이상" />
+        <button class="login-btn" id="loginBtn">로그인</button>
+        <button class="signup-btn" id="signupBtn">신규 회원가입</button>
       </div>
-    </div>
+    </section>
 
-    <div class="help">
-      긴 문장은 생성 시간이 오래 걸릴 수 있습니다. 처음에는 짧은 문장으로 테스트해보세요.<br />
-      속도는 0.25부터 4.0까지 조절할 수 있습니다.
-    </div>
+    <section id="mainSection" class="hidden">
+      <div class="top-bar">
+        <div class="user-info">접속 중인 디자이너: <strong id="userEmail"></strong></div>
+        <button class="logout-btn" id="logoutBtn">로그아웃</button>
+      </div>
+
+      <div class="workspace">
+        <div class="panel">
+          <div class="panel-title">1단계: 외형/구도 레퍼런스 주입 (선택)</div>
+          <input type="file" id="fileInput" accept="image/*" style="margin-bottom:10px;" />
+          <button class="action-btn" id="visionBtn">레퍼런스 이미지 분석 추출</button>
+          
+          <div style="margin-top: 15px;">
+            <div class="panel-title">2단계: 텍스트 디테일 요구사항 기입</div>
+            <textarea id="promptInput" placeholder="여기에 생성하고 싶은 캐릭터의 특성이나 배경을 적으세요. (위 레퍼런스 분석 결과와 믹스되어 전송됩니다)"></textarea>
+          </div>
+          
+          <button class="main-btn" id="generateBtn">스튜디오 이미지 생성 시작</button>
+        </div>
+
+        <div class="panel" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="panel-title">결과 모니터링 아웃풋</div>
+            <div id="status" class="status">대기 중... 작업을 시작하세요.</div>
+            <img id="resultImage" class="preview-img hidden" src="" alt="AI 생성 결과물" />
+          </div>
+          <div style="margin-top:15px;">
+            <audio id="audioAlert" controls class="hidden" style="width:100%;"></audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Firebase 리얼타임 데이터베이스 백업 내역 (동기화됨)</div>
+        <div id="dataList" class="list"></div>
+      </div>
+    </section>
   </div>
 
-  <script>
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxzvCeCidpIBm3Ez_AbmzTRrvzCkPa_7x-irAazDPzljPmuqjjHZOqXxfyS1vNh7tX1/exec';
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { getDatabase, ref, push, set, remove, onValue, off } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
-    const textInput = document.getElementById('textInput');
-    const modelSelect = document.getElementById('modelSelect');
-    const voiceSelect = document.getElementById('voiceSelect');
-    const speedInput = document.getElementById('speedInput');
-    const makeBtn = document.getElementById('makeBtn');
-    const clearBtn = document.getElementById('clearBtn');
+    // 요청하신 Firebase App 자격 증명 동적 바인딩
+    const firebaseConfig = {
+      apiKey: "AIzaSyDFH_9Pa7aalUp_7sXRMnC8yfyY3JW567A",
+      authDomain: "school-1404a.firebaseapp.com",
+      databaseURL: "https://school-1404a-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "school-1404a",
+      storageBucket: "school-1404a.firebasestorage.app",
+      messagingSenderId: "1071947727241",
+      appId: "1:1071947727241:web:935c2cdf974129c756a158",
+      measurementId: "G-JDDZ7B9VHK"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    // 고유 연결 구글 앱스 스크립트 웹앱 주소 세팅
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzxkYtxZeSEJcnAsv5BR3kUX3A_19A8WtwhNPaxZ5RyoUF_We2UF_CN2D8eFfty7JfGYQ/exec';
+
+    // DOM 포인터 바인딩
+    const authSection = document.getElementById('authSection');
+    const mainSection = document.getElementById('mainSection');
+    const emailInput = document.getElementById('emailInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const userEmail = document.getElementById('userEmail');
+    
+    const fileInput = document.getElementById('fileInput');
+    const visionBtn = document.getElementById('visionBtn');
+    const promptInput = document.getElementById('promptInput');
+    const generateBtn = document.getElementById('generateBtn');
     const statusBox = document.getElementById('status');
-    const resultBox = document.getElementById('resultBox');
-    const audioPlayer = document.getElementById('audioPlayer');
-    const downloadLink = document.getElementById('downloadLink');
+    const resultImage = document.getElementById('resultImage');
+    const audioAlert = document.getElementById('audioAlert');
+    const dataList = document.getElementById('dataList');
 
-    makeBtn.addEventListener('click', makeSpeech);
-    clearBtn.addEventListener('click', clearPage);
+    let currentUser = null;
+    let databaseRef = null;
+    let extractedVisionPrompt = ""; // 비전 API 분석 보관 변수
 
-    textInput.addEventListener('keydown', function(event) {
-      if (event.key === 'Enter' && event.ctrlKey) {
-        makeSpeech();
+    /* ==========================================================
+       [인증 계층 시스템 구현] 
+       ========================================================== */
+    signupBtn.addEventListener('click', async () => {
+      if(passwordInput.value.length < 6) return alert('패스워드는 최소 6자리 이상 설정하세요.');
+      try {
+        await createUserWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value.trim());
+        alert('회원등록이 원활하게 완료되었습니다.');
+      } catch (err) { alert('가입 실패: ' + err.message); }
+    });
+
+    loginBtn.addEventListener('click', async () => {
+      try {
+        await signInWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value.trim());
+      } catch (err) { alert('인증 실패: 사용자 정보를 검증할 수 없습니다.'); }
+    });
+
+    logoutBtn.addEventListener('click', () => signOut(auth));
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        authSection.classList.add('hidden');
+        mainSection.classList.remove('hidden');
+        userEmail.textContent = user.email;
+        startDatabaseSync(user.uid);
+      } else {
+        currentUser = null;
+        authSection.classList.remove('hidden');
+        mainSection.classList.add('hidden');
+        stopDatabaseSync();
       }
     });
 
-    async function makeSpeech() {
-      const text = textInput.value.trim();
-      const model = modelSelect.value;
-      const voice = voiceSelect.value;
-      const speed = Number(speedInput.value || 1.0);
+    /* ==========================================================
+       [핵심 비즈니스 로직 - AI 오케스트레이션 수행 파트] 
+       ========================================================== */
+    
+    // 1단계: 레퍼런스 이미지 분석 처리 (gpt-4o 비전 채널)
+    visionBtn.addEventListener('click', async () => {
+      const file = fileInput.files[0];
+      if (!file) return alert('분석할 레퍼런스 파일을 먼저 업로드해주세요.');
+      
+      statusBox.textContent = "구도 및 콘셉트 이미지 추출 가동 중...";
+      visionBtn.disabled = true;
+      
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64Image = reader.result.split(',')[1];
+        try {
+          const res = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ type: 'vision', base64Image: base64Image })
+          });
+          const data = await res.json();
+          if(data.choices && data.choices[0]) {
+            extractedVisionPrompt = data.choices[0].message.content;
+            promptInput.value = "[추출 레퍼런스 구성]\n" + extractedVisionPrompt + "\n\n[추가 변형 디테일 기입]\n" + promptInput.value;
+            statusBox.textContent = "레퍼런스 스타일 분석 추출 성공.";
+          } else { throw new Error('구조 해석 실패'); }
+        } catch (e) {
+          statusBox.textContent = "비전 분석 오류.";
+          alert(e.message);
+        } finally { visionBtn.disabled = false; }
+      };
+      reader.readAsDataURL(file);
+    });
 
-      if (!text) {
-        alert('음성으로 변환할 텍스트를 입력해주세요.');
-        return;
-      }
-
-      if (speed < 0.25 || speed > 4.0) {
-        alert('속도는 0.25부터 4.0 사이로 입력해주세요.');
-        return;
-      }
-
+    // 2단계: 이미지 생성 전송 통합 제어 파트 (DALL-E 3 -> TTS 오디오 알림 -> 데이터베이스 자동 백업)
+    generateBtn.addEventListener('click', async () => {
+      const finalPrompt = promptInput.value.trim();
+      if(!finalPrompt) return alert('이미지를 생성할 기획 조건문이 비어있습니다.');
+      
+      setGeneratingState(true);
+      statusBox.textContent = "OpenAI DALL-E 3 화가 로봇 작동 중 (약 10~15초 소요)...";
+      
       try {
-        setLoading(true);
-        resultBox.classList.add('hidden');
-        statusBox.textContent = 'Apps Script 서버에 TTS 요청을 보내는 중입니다.';
+        // [Task A] 이미지 모델 API 호출 
+        const imgRes = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({ type: 'image_gen', prompt: finalPrompt })
+        });
+        const imgData = await imgRes.json();
+        
+        if(!imgData.data || !imgData.data[0]) throw new Error(imgData.error || "이미지 수신 에러");
+        
+        const generatedImageUrl = imgData.data[0].url;
+        resultImage.src = generatedImageUrl;
+        resultImage.classList.remove('hidden');
+        
+        // [Task B] Firebase Realtime Database 백업 로깅 적재
+        statusBox.textContent = "렌더링 완료. 무결성 데이터 원격 저장 클라우드 연동 중...";
+        const itemsRef = ref(database, `users/${currentUser.uid}/items`);
+        const newItemRef = push(itemsRef);
+        await set(newItemRef, {
+          prompt: finalPrompt,
+          imageUrl: generatedImageUrl,
+          createdAt: new Date().toLocaleString('ko-KR')
+        });
 
-        const response = await fetch(APPS_SCRIPT_URL, {
+        // [Task C] OpenAI TTS 파이프라인 트리거 알림 구동
+        statusBox.textContent = "작업 완료 지표 수립, TTS 알림 음성 생성 요청 변환 중...";
+        const ttsRes = await fetch(APPS_SCRIPT_URL, {
           method: 'POST',
           body: JSON.stringify({
             type: 'tts',
-            text: text,
-            model: model,
-            voice: voice,
-            speed: speed
+            text: "디자이너님, 요청하신 인공지능 이미지 생성 스튜디오 작업 가동이 완벽하게 완료되었습니다. 하단 로그 백업본을 확인해보세요.",
+            model: "tts-1",
+            voice: "nova",
+            speed: 1.0
           })
         });
-
-        const data = await response.json();
-
-        if (data.error) {
-          throw new Error(data.error);
+        const ttsData = await ttsRes.json();
+        
+        if(ttsData.audioBase64) {
+          const audioUrl = base64ToAudioUrl(ttsData.audioBase64, 'audio/mpeg');
+          audioAlert.src = audioUrl;
+          audioAlert.classList.remove('hidden');
+          audioAlert.play(); // 즉시 안내 음성 송출 실행
         }
-
-        if (!data.audioBase64) {
-          throw new Error('음성 데이터를 받지 못했습니다.');
-        }
-
-        const audioUrl = base64ToAudioUrl(data.audioBase64, 'audio/mpeg');
-
-        audioPlayer.src = audioUrl;
-        downloadLink.href = audioUrl;
-        downloadLink.download = makeFileName();
-        resultBox.classList.remove('hidden');
-        statusBox.textContent = '음성 생성 완료';
-      } catch (error) {
-        console.error(error);
-        statusBox.textContent = '요청 실패';
-        alert('오류가 발생했습니다.\n\n' + error.message);
+        
+        statusBox.textContent = "디자인 프로세스 전 과정 완료!";
+      } catch (err) {
+        console.error(err);
+        statusBox.textContent = "프로세스 수행 오류.";
+        alert(err.message);
       } finally {
-        setLoading(false);
+        setGeneratingState(false);
       }
+    });
+
+    /* ==========================================================
+       [Firebase Realtime DB 데이터 동기화 계층 구현] 
+       ========================================================== */
+    function startDatabaseSync(uid) {
+      databaseRef = ref(database, `users/${uid}/items`);
+      onValue(databaseRef, (snapshot) => {
+        const data = snapshot.val();
+        dataList.innerHTML = '';
+        if (!data) {
+          dataList.innerHTML = '<div style="text-align:center; padding:20px; color:#aaa;">보관함 서버가 비어있습니다.</div>';
+          return;
+        }
+        
+        Object.entries(data).reverse().forEach(([id, item]) => {
+          const div = document.createElement('div');
+          div.className = 'item';
+          div.innerHTML = `
+            <img class="history-thumb" src="${item.imageUrl}" onclick="window.open('${item.imageUrl}')" title="크게 보기" />
+            <div>
+              <p class="item-prompt">${escapeHTML(item.prompt)}</p>
+              <div class="item-date">스냅샷 저장일: ${item.createdAt}</div>
+            </div>
+            <div>
+              <button class="delete-btn" onclick="deleteHistory('${id}')">영구삭제</button>
+            </div>
+          `;
+          dataList.appendChild(div);
+        });
+      });
     }
 
+    function stopDatabaseSync() {
+      if (databaseRef) { off(databaseRef); databaseRef = null; }
+    }
+
+    window.deleteHistory = async function(id) {
+      if(!currentUser || !confirm('파이어베이스 백업 데이터베이스에서 해당 기록을 완전 삭제합니까?')) return;
+      await remove(ref(database, `users/${currentUser.uid}/items/${id}`));
+    };
+
+    /* ==========================================================
+       [유틸리티 파트 - 헬퍼 라이브러리 핸들러] 
+       ========================================================== */
     function base64ToAudioUrl(base64, mimeType) {
       const byteCharacters = atob(base64);
       const byteArrays = [];
-
       for (let offset = 0; offset < byteCharacters.length; offset += 512) {
         const slice = byteCharacters.slice(offset, offset + 512);
         const byteNumbers = new Array(slice.length);
-
-        for (let i = 0; i < slice.length; i++) {
-          byteNumbers[i] = slice.charCodeAt(i);
-        }
-
-        const byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
+        for (let i = 0; i < slice.length; i++) byteNumbers[i] = slice.charCodeAt(i);
+        byteArrays.push(new Uint8Array(byteNumbers));
       }
-
-      const blob = new Blob(byteArrays, { type: mimeType });
-      return URL.createObjectURL(blob);
+      return URL.createObjectURL(new Blob(byteArrays, { type: mimeType }));
     }
 
-    function makeFileName() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const hour = String(now.getHours()).padStart(2, '0');
-      const minute = String(now.getMinutes()).padStart(2, '0');
-      return `tts-${year}${month}${day}-${hour}${minute}.mp3`;
+    function setGeneratingState(isWorking) {
+      generateBtn.disabled = isWorking;
+      generateBtn.textContent = isWorking ? "인공지능 가동 및 동기화 처리 연동 중..." : "스튜디오 이미지 생성 시작";
     }
 
-    function setLoading(isLoading) {
-      makeBtn.disabled = isLoading;
-      makeBtn.textContent = isLoading ? '생성 중...' : '음성 만들기';
-    }
-
-    function clearPage() {
-      textInput.value = '';
-      statusBox.textContent = '';
-      audioPlayer.removeAttribute('src');
-      downloadLink.href = '#';
-      resultBox.classList.add('hidden');
+    function escapeHTML(text) {
+      return String(text).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
     }
   </script>
 </body>
 </html>
-
