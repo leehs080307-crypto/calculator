@@ -147,7 +147,7 @@
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
     import { getDatabase, ref, push, set, remove, onValue, off } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
-    // 요청하신 Firebase App 자격 증명 동적 바인딩
+    // Firebase App 자격 증명 동적 바인딩
     const firebaseConfig = {
       apiKey: "AIzaSyDFH_9Pa7aalUp_7sXRMnC8yfyY3JW567A",
       authDomain: "school-1404a.firebaseapp.com",
@@ -163,8 +163,8 @@
     const auth = getAuth(app);
     const database = getDatabase(app);
 
-    // 고유 연결 구글 앱스 스크립트 웹앱 주소 세팅
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzxkYtxZeSEJcnAsv5BR3kUX3A_19A8WtwhNPaxZ5RyoUF_We2UF_CN2D8eFfty7JfGYQ/exec';
+    // 요청하신 새로운 구글 앱스 스크립트 웹앱 주소 업데이트 반영 완료
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7pdPujk12Nxt_PcAxn-wHaHw915sy6TY9MA8Z58oaGqmX7UCk8pr31zg0bhdVYWc5/exec';
 
     // DOM 포인터 바인딩
     const authSection = document.getElementById('authSection');
@@ -187,7 +187,7 @@
 
     let currentUser = null;
     let databaseRef = null;
-    let extractedVisionPrompt = ""; // 비전 API 분석 보관 변수
+    let extractedVisionPrompt = "";
 
     /* ==========================================================
        [인증 계층 시스템 구현] 
@@ -219,6 +219,7 @@
         currentUser = null;
         authSection.classList.remove('hidden');
         mainSection.classList.add('hidden');
+        userEmail.textContent = '';
         stopDatabaseSync();
       }
     });
@@ -307,7 +308,7 @@
           const audioUrl = base64ToAudioUrl(ttsData.audioBase64, 'audio/mpeg');
           audioAlert.src = audioUrl;
           audioAlert.classList.remove('hidden');
-          audioAlert.play(); // 즉시 안내 음성 송출 실행
+          audioAlert.play();
         }
         
         statusBox.textContent = "디자인 프로세스 전 과정 완료!";
